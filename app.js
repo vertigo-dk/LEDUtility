@@ -2,7 +2,7 @@ var Table = require('cli-table');
 var program = require('commander');
 var inquirer = require("inquirer");
 
-var ArtNet = require('../node-artnet');
+var ArtNet = require('node-artnet');
 
 var controller = ArtNet.createController();
 
@@ -43,7 +43,7 @@ if(program.monitor){
 				], function(res2){
 					controller.updateClient(res.ip, res2.name, [(res.id)*4+0,(res.id)*4+1,(res.id)*4+2,(res.id)*4+3], true);
 					setTimeout(function(){
-						controller.updateClient(res.ip, res2.name, [(res.id)*4+0,(res.id)*4+1,(res.id)*4+2,(res.id)*4+3], false);
+						controller.updateClient(res.ip, undefined, undefined, false);
 						setTimeout(function(){
 							process.exit()	
 						}, 100)
