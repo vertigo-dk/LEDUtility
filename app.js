@@ -2,7 +2,7 @@ var Table = require('cli-table');
 var program = require('commander');
 var inquirer = require("inquirer");
 
-var ArtNet = require('node-artnet');
+var ArtNet = require('artnet');
 
 var controller = ArtNet.createController();
 
