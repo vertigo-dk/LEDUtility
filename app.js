@@ -42,7 +42,7 @@ if(program.monitor){
 				inquirer.prompt([
 					{name:'name', message: 'Node name', default:'VertigoLED '+zpad(res.id,3)}
 				], function(res2){
-					controller.updateClient(res.ip, res2.name, [(res.id),(res.id)+1,(res.id)+2,(res.id)+3], true);
+					controller.updateClient(res.ip, res2.name, [(res.id),(res.id)*1+1,(res.id)*1+2,(res.id)*1+3], true);
 					setTimeout(function(){
 						controller.updateClient(res.ip, undefined, undefined, false);
 						setTimeout(function(){
