@@ -1,13 +1,14 @@
 var Table = require('cli-table');
 var program = require('commander');
 var inquirer = require("inquirer");
+var zpad = require('zpad');
 
 var ArtNet = require('artnet');
 
 var controller = ArtNet.createController();
 
 program
-  .version('0.0.1')
+  .version('0.0.2')
   .option('-m --monitor', 'Live monitor nodes')
   .option('-u --update', 'Update config of node')
   .parse(process.argv)
@@ -39,9 +40,9 @@ if(program.monitor){
 			], function( res){
 
 				inquirer.prompt([
-					{name:'name', message: 'Node name', default:'VardeLED '+res.id}	
+					{name:'name', message: 'Node name', default:'VertigoLED '+zpad(res.id,3)}
 				], function(res2){
-					controller.updateClient(res.ip, res2.name, [(res.id)*4+0,(res.id)*4+1,(res.id)*4+2,(res.id)*4+3], true);
+					controller.updateClient(res.ip, res2.name, [(res.id),(res.id)+1,(res.id)+2,(res.id)+3], true);
 					setTimeout(function(){
 						controller.updateClient(res.ip, undefined, undefined, false);
 						setTimeout(function(){
