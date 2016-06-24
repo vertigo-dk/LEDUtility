@@ -44,7 +44,7 @@ if(program.monitor){
 				], function(res2){
 					controller.updateClient(res.ip, res2.name, [(res.id),(res.id)*1+1,(res.id)*1+2,(res.id)*1+3], true);
 					setTimeout(function(){
-						//controller.updateClient(res.ip, undefined, undefined, false);
+						controller.updateClient(res.ip, undefined, undefined, false);
 						setTimeout(function(){
 							process.exit()
 						}, 100)
