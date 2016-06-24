@@ -17,7 +17,7 @@ program
 if(program.monitor){
 	setTimeout(function(){
 		//console.log('\033[2J');
-		updateTable();	
+		updateTable();
 	}, 200)
 } else if(program.update){
 	setTimeout(function(){
@@ -37,26 +37,26 @@ if(program.monitor){
 					console.log(d)
 				}},
 				{name: 'id', message:'Node ID', default:1}
-			], function( res){
+			], function(res){
 
 				inquirer.prompt([
-					{name:'name', message: 'Node name', default:'VertigoLED '+zpad(res.id,3)}
+					{name:'name', message: 'Node name', default:'BlackLED '+zpad(res.id,3)}
 				], function(res2){
 					controller.updateClient(res.ip, res2.name, [(res.id),(res.id)*1+1,(res.id)*1+2,(res.id)*1+3], true);
 					setTimeout(function(){
-						controller.updateClient(res.ip, undefined, undefined, false);
+						//controller.updateClient(res.ip, undefined, undefined, false);
 						setTimeout(function(){
-							process.exit()	
+							process.exit()
 						}, 100)
 					},1000);
-				 	
-				})	
+
+				})
 			})
 		}
 
 	}, 200);
 }
- 
+
 
 function updateTable(){
 	var table = new Table({
@@ -71,11 +71,10 @@ function updateTable(){
 	}
 	console.log('\033[2J');
 	if(table.length > 0){
-		console.log(table.toString()); 
+		console.log(table.toString());
 	} else {
 		console.log("No ArtNet nodes found");
 	}
 
 	setTimeout(updateTable, 1000);
 }
-
