@@ -60,13 +60,13 @@ if(program.monitor){
 
 function updateTable(){
 	var table = new Table({
-	    head: ['IP', 'MAC', 'Name','Version', 'Ports', 'Universes', 'net', 'subnet']
+	    head: ['IP', 'MAC', 'Name','Version', 'Ports', 'Universes', 'net', 'subnet', 'report']
 	});
 
 	for(var i=0;i<controller.nodes.length;i++){
 		console.log(controller.nodes[i])
 		table.push(
-		    [controller.nodes[i].ip, controller.nodes[i].mac, controller.nodes[i].name, controller.nodes[i].version, controller.nodes[i].numOutputs, controller.nodes[i].universesOutput.join(','), controller.nodes[i].net, controller.nodes[i].subnet]
+		    [controller.nodes[i].ip, controller.nodes[i].mac, controller.nodes[i].name, controller.nodes[i].version, controller.nodes[i].numOutputs, controller.nodes[i].universesOutput.join(','), controller.nodes[i].net, controller.nodes[i].subnet, controller.nodes[i].report]
 		);
 	}
 	console.log('\033[2J');
