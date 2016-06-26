@@ -5,46 +5,223 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>BlackLED control panel</title>
-    //<link href="mystyle.css" rel="stylesheet" type="text/css" />
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var currentLocation = window.location;
         var socket = io.connect('http://' + currentLocation.hostname + ':8080');
-        console.log('oi');
         socket.on('connect', function() {
             socket.emit('updateList', {});
-            //updateNode();
         });
 
+        // update routine
+        // setInterval(function() {
+        //     socket.emit('updateList', {});
+        // }, 1000);
 
+        function BlackLED(ip, mac, name, version, numOutputs, universesOutput, net, subnet, report) {
+            this.ip = ip;
+            this.mac = mac;
+            this.name = name;
+            this.version = version;
+            this.numOutputs = numOutputs;
+            this.universesOutput = universesOutput;
+            this.net = net;
+            this.subnet = subnet;
+            this.report = report;
+        };
+
+        // BlackLED.prototype.draw() {
+        //
+        // };
+
+        function updateClient(boxIp) {
+            socket.emit('updateClient', {
+                ip: boxIp,
+                name: document.getElementById('newName').value,
+                id: document.getElementById('newStartAddress').value
+            });
+        };
 
         socket.on('nodeList', function(list) {
-            document.getElementById('nodeList').innerHTML = "<p>test</p>"; //+list
-        });
+            var boxes = [];
+            for (var i = 0; i < list.length; i++) {
+                boxes.push(new BlackLED(list[i].ip, list[i].mac, list[i].name, list[i].version, list[i].numOutputs, list[i].universesOutput, list[i].net, list[i].subnet, list[i].report));
+            }
+            if (boxes.length > 0) {
+                // DRAW
+                var table = document.getElementById("table");
+                table.innerHTML = "";
+                var rowCount = table.rows.length;
+                var row = table.insertRow(rowCount);
 
-        function updateNode() {
-            socket.emit("updateClient", {
-                    ip: 2.0.0.10,
-                    name: 'BlackLED x',
-                    id: 0
+                row.insertCell(0).innerHTML = "IP";
+                row.insertCell(1).innerHTML = "MAC";
+                row.insertCell(2).innerHTML = "NAME";
+                row.insertCell(3).innerHTML = "ADDRESS";
+                row.insertCell(4).innerHTML = "SW_VERSION";
+                row.insertCell(5).innerHTML = "OUTPUTS";
+                row.insertCell(6).innerHTML = "UNIVERSES/OUTPUT";
+                row.insertCell(7).innerHTML = "TEMPERATURE";
+                row.insertCell(8).innerHTML = "FRAMERATE";
+                row.insertCell(9).innerHTML = "uUniPF";
+                row.insertCell(10).innerHTML = " ";
+
+                for (var i = 0; i < boxes.length; i++) {
+                    rowCount = table.rows.length;
+                    row = table.insertRow(rowCount);
+                    var report = boxes[i].report.split(";");
+
+                    var numOutputs = report[1] || undefined;
+                    var numUniPOut = report[3] || undefined;
+                    var temp = report[5] || undefined;
+                    var fps = report[7] || undefined;
+                    var uUniPF = report[9] || undefined;
+                    var startAddress = (boxes[i].net << 8) + (boxes[i].subnet << 4) + parseInt(boxes[i].universesOutput[0]);
+                    var endAddress = (boxes[i].net << 8) + (boxes[i].subnet << 4) + parseInt(boxes[i].universesOutput[0]) + numOutputs * numUniPOut;
+
+                    row.insertCell(0).innerHTML = boxes[i].ip;
+                    row.insertCell(1).innerHTML = boxes[i].mac;
+                    row.insertCell(2).innerHTML = boxes[i].name;
+                    row.insertCell(3).innerHTML = parseInt(startAddress) + " - " + parseInt(endAddress);
+                    row.insertCell(4).innerHTML = boxes[i].version;
+                    row.insertCell(5).innerHTML = numOutputs;
+                    row.insertCell(6).innerHTML = numUniPOut;
+                    if (temp > 60) {
+                        row.insertCell(7).innerHTML = "<span class='red'>" + temp + "°C</span>";
+                    } else if (temp > 40) {
+                        row.insertCell(7).innerHTML = "<span class='yellow'>" + temp + "°C</span>";
+                    } else {
+                        row.insertCell(7).innerHTML = "<span class='green'>" + temp + "°C</span>";
+                    }
+                    row.insertCell(8).innerHTML = fps;
+                    row.insertCell(9).innerHTML = uUniPF;
+                    row.insertCell(10).innerHTML = "<a class='inline_a' href='#' onClick='updateClient(" + boxes[i].ip + ");' >update</a>";
+
                 }
-            });
-        }
+
+            } else {
+                document.getElementById("nodeList").innerHTML = "<p> no nodes found  </p>";
+            }
+        });
     </script>
+    <style>
+        #content {
+            margin-left: 20px;
+        }
+
+        body {
+            background-color: #000;
+            color: #FFF;
+            font-family: arial;
+            font-size: 16px;
+        }
+
+        td {
+            color: #FFF;
+            border-bottom: solid 1px;
+        }
+
+        input {
+            background-color: #000;
+            color: #FFF;
+            font-family: arial;
+            border: 1px;
+            font-size: 16px;
+        }
+
+        .globalControl_a {
+            display: block;
+            border: 1px solid;
+            height: auto;
+            width: 100px;
+            text-align: center;
+            font-size: 20px;
+            text-decoration: none;
+            background-color: #222;
+            color: #fff;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .inline_a {
+            display: block;
+            border: 1px solid;
+            height: auto;
+            width: 50px;
+            text-align: center;
+            font-size: 12px;
+            text-decoration: none;
+            background-color: #222;
+            color: #fff;
+            margin-bottom: 0px;
+            border-radius: 5px;
+        }
+
+        h1 {
+            text-align: left;
+        }
+
+        .red {
+            color: #F00;
+        }
+
+        .yellow {
+            color: #FF0;
+        }
+
+        .green {
+            color: #0F0;
+        }
+
+        .justShadow {
+            color: #000;
+            text-shadow: 2px 2px #ff0000;
+            margin-bottom: 2px;
+        }
+
+        table {
+            /*margin-left: auto;*/
+            margin-right: auto;
+        }
+    </style>
+
+
 </head>
+
 <body>
-    <div class="header">
-        <h1> BlackLED Control Panel </h1>
+    <div id="content">
+        <div class="header">
+            <h1><span class="justShadow">Black </span><span class="red">LED</span> Control Panel <img src="Logo.png" style="width:50px;height:auto;"> </h1>
+        </div>
+
+
+
+        <!--list of nodes-->
+        <div id='nodeList' class="list">
+            <table style='width:95%' id='table'>
+            </table>
+        </div>
+        <!--global controls-->
+        <div class="mainControl">
+            <p>
+                <a class="globalControl_a" href="#" onClick="socket.emit('updateList', {});">update list</a>
+                <table style="width:100% boarder: none">
+                    <tr>
+                        <td>newName</td>
+                        <td>newStartAddress</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="newName" type="text" />
+                        </td>
+                        <td>
+                            <input id="newStartAddress" type="number" /> </td>
+                    </tr>
+                </table>
+            </p>
+        </div>
     </div>
 
-    <!--global controls-->
-    <div class="mainControl">
-        <a class="update" href="#" onClick="socket.emit('updateList', {});">update</a>
-    </div>
-
-    <!--list of nodes-->
-    <div id='nodeList' class="list">
-    </div>
 </body>
 
 </html>

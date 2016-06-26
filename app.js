@@ -10,7 +10,6 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
-var firstTime = true;
 
 var controller = ArtNet.createController();
 
@@ -34,7 +33,13 @@ if (program.monitor) {
         if (controller.nodes.length == 0) {
             console.error("No nodes found")
         } else {
-            controller.nodes.sort();
+            controller.nodes.sort(function(a, b){
+                var startAddressA = (a.net <<8)+(a.subnet<<4)+parseInt(a.universesOutput[0]);
+                var startAddressB = (b.net <<8)+(b.subnet<<4)+parseInt(b.universesOutput[0]);
+                return startAddressA-startAddressB;
+            });
+
+
             for (var i = 0; i < controller.nodes.length; i++) {
                 ips.push({
                     name: controller.nodes[i].ip + " (" + controller.nodes[i].name + ")",
@@ -77,33 +82,28 @@ if (program.monitor) {
     }, 200);
 
 } else if (program.webserver) {
-    // if (firstTime) {
-        server.listen(8080);
-        console.log('Local server established at port 8080');
+    server.listen(8080);
+    console.log('Local server established at port 8080');
 
-        // create fileserver
-        app.use(express.static(__dirname + '/HTML'));
-        app.get('/', function(req, res, next) {
-            res.sendFile(__dirname + '/HTML/index.html');
-        });
-    //     firstTime = false;
-    // }
+    // create fileserver
+    app.use(express.static(__dirname + '/HTML'));
+    app.get('/', function(req, res, next) {
+        res.sendFile(__dirname + '/HTML/index.html');
+    });
+
 
     io.sockets.on('connection', function(socket) {
         console.log('* page loaded');
         socket.on("updateList", function(obj) {
-            console.log('* update ArtNode list');
-            var list = "test List";
-            socket.emit("nodeList", list);
+            socket.emit("nodeList", createList()||undefined);
         });
         socket.on("updateClient", function(node) {
-            // controller.updateClient(node.ip, node.name, [(node.id),(node.id)*1+1,(node.id)*1+2,(node.id)*1+3], true);
-            console.log('* update ArtNode  -  Port:'); // + obj.server.port + ' IP:' + obj.server.host);
+            controller.updateClient(node.ip, node.name, [(node.id),(node.id)*1+1,(node.id)*1+2,(node.id)*1+3], true);
+            // console.log('* update ArtNode  -  IP: ' + node.ip.port + ' Name:' + node.name + ' startAddress:' + node.id);
         });
 
         // setTimeout(function() {
-        //     socket.emit("nodeList", "test");// createList());
-        //     console.log('* update ArtNode  -  list');
+        //     socket.emit("nodeList", createList());
         // }, 1000);
     });
 
@@ -132,24 +132,28 @@ function updateTable() {
     setTimeout(updateTable, 1000);
 }
 
+function BlackLED(ip, mac, name, version, numOutputs, universesOutput, net, subnet, report) {
+    this.ip = ip;
+    this.mac = mac;
+    this.name = name;
+    this.version = version;
+    this.numOutputs = numOutputs;
+    this.universesOutput = universesOutput;
+    this.net = net;
+    this.subnet = subnet;
+    this.report = report;
+};
+
 function createList() {
-    var table = new Table({
-        head: ['IP', 'MAC', 'Name', 'Version', 'Ports', 'Universes', 'net', 'subnet', 'report']
+    var boxes = [];
+    controller.nodes.sort(function(a, b){
+        var startAddressA = (a.net <<8)+(a.subnet<<4)+parseInt(a.universesOutput[0]);
+        var startAddressB = (b.net <<8)+(b.subnet<<4)+parseInt(b.universesOutput[0]);
+        return startAddressA-startAddressB;
     });
 
     for (var i = 0; i < controller.nodes.length; i++) {
-        console.log(controller.nodes[i])
-        table.push(
-            [controller.nodes[i].ip, controller.nodes[i].mac, controller.nodes[i].name, controller.nodes[i].version, controller.nodes[i].numOutputs, controller.nodes[i].universesOutput.join(','), controller.nodes[i].net, controller.nodes[i].subnet, controller.nodes[i].report]
-        );
+        boxes.push(new BlackLED(controller.nodes[i].ip, controller.nodes[i].mac, controller.nodes[i].name, controller.nodes[i].version, controller.nodes[i].numOutputs, controller.nodes[i].universesOutput.join(','), controller.nodes[i].net, controller.nodes[i].subnet, controller.nodes[i].report));
     }
-
-    if (table.length > 0) {
-        console.log(table.toString());
-
-        return table.toString();
-    } else {
-        return "No ArtNet nodes found";
-    }
-
+    return boxes;
 }
