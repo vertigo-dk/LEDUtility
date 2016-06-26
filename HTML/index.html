@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>BlackLED control panel</title>
+    //<link href="mystyle.css" rel="stylesheet" type="text/css" />
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var currentLocation = window.location;
+        var socket = io.connect('http://' + currentLocation.hostname + ':8080');
+        console.log('oi');
+        socket.on('connect', function() {
+            socket.emit('updateList', {});
+            //updateNode();
+        });
+
+
+
+        socket.on('nodeList', function(list) {
+            document.getElementById('nodeList').innerHTML = "<p>test</p>"; //+list
+        });
+
+        function updateNode() {
+            socket.emit("updateClient", {
+                    ip: 2.0.0.10,
+                    name: 'BlackLED x',
+                    id: 0
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="header">
+        <h1> BlackLED Control Panel </h1>
+    </div>
+
+    <!--global controls-->
+    <div class="mainControl">
+        <a class="update" href="#" onClick="socket.emit('updateList', {});">update</a>
+    </div>
+
+    <!--list of nodes-->
+    <div id='nodeList' class="list">
+    </div>
+</body>
+
+</html>
