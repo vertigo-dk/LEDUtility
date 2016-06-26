@@ -15,6 +15,9 @@
     "inquirer": "^0.10.1",
     "prompt": "^0.2.14",
     "underscore": "^1.8.3",
-    "zpad": "^0.5.0"
+    "zpad": "^0.5.0",
+    "express" : "4.x.x",
+    "socket.io": "1.4.5",
+    "http": "x.x.x"
   }
 }
