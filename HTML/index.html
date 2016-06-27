@@ -33,20 +33,31 @@
         // BlackLED.prototype.draw() {
         //
         // };
+        // function for 3 digit numbers
+        function lpad(value, padding) {
+            var zeroes = new Array(padding + 1).join("0");
+            return (zeroes + value).slice(-padding);
+        }
 
         function updateClient(boxIp) {
-            socket.emit('updateClient', {
-                ip: boxIp,
-                name: document.getElementById('newName').value,
-                id: document.getElementById('newStartAddress').value
-            });
+            var newName = document.getElementById('newName').value + " " + lpad(document.getElementById('newStartAddress').value,
+                3);
+        var newAddress = document.getElementById('newStartAddress').value;
+        socket.emit('updateClient', {
+            ip: boxIp,
+            name: newName,
+            id: newAddress
+        });
         };
+        var boxes = [];
 
         socket.on('nodeList', function(list) {
-            var boxes = [];
+            boxes = [];
+
             for (var i = 0; i < list.length; i++) {
                 boxes.push(new BlackLED(list[i].ip, list[i].mac, list[i].name, list[i].version, list[i].numOutputs, list[i].universesOutput, list[i].net, list[i].subnet, list[i].report));
             }
+
             if (boxes.length > 0) {
                 // DRAW
                 var table = document.getElementById("table");
@@ -54,13 +65,13 @@
                 var rowCount = table.rows.length;
                 var row = table.insertRow(rowCount);
 
-                row.insertCell(0).innerHTML = "IP";
-                row.insertCell(1).innerHTML = "MAC";
-                row.insertCell(2).innerHTML = "NAME";
-                row.insertCell(3).innerHTML = "ADDRESS";
-                row.insertCell(4).innerHTML = "SW_VERSION";
-                row.insertCell(5).innerHTML = "OUTPUTS";
-                row.insertCell(6).innerHTML = "UNIVERSES/OUTPUT";
+                row.insertCell(0).innerHTML = "NAME";
+                row.insertCell(1).innerHTML = "ADDRESS";
+                row.insertCell(2).innerHTML = "IP";
+                row.insertCell(3).innerHTML = "MAC";
+                row.insertCell(4).innerHTML = "OUTPUTS";
+                row.insertCell(5).innerHTML = "UNIVERSES/OUTPUT";
+                row.insertCell(6).innerHTML = "SW_VERSION";
                 row.insertCell(7).innerHTML = "TEMPERATURE";
                 row.insertCell(8).innerHTML = "FRAMERATE";
                 row.insertCell(9).innerHTML = "uUniPF";
@@ -79,13 +90,14 @@
                     var startAddress = (boxes[i].net << 8) + (boxes[i].subnet << 4) + parseInt(boxes[i].universesOutput[0]);
                     var endAddress = (boxes[i].net << 8) + (boxes[i].subnet << 4) + parseInt(boxes[i].universesOutput[0]) + numOutputs * numUniPOut;
 
-                    row.insertCell(0).innerHTML = boxes[i].ip;
-                    row.insertCell(1).innerHTML = boxes[i].mac;
-                    row.insertCell(2).innerHTML = boxes[i].name;
-                    row.insertCell(3).innerHTML = parseInt(startAddress) + " - " + parseInt(endAddress);
-                    row.insertCell(4).innerHTML = boxes[i].version;
-                    row.insertCell(5).innerHTML = numOutputs;
-                    row.insertCell(6).innerHTML = numUniPOut;
+                    row.insertCell(0).innerHTML = boxes[i].name;
+                    row.insertCell(1).innerHTML = parseInt(startAddress) + " - " + parseInt(endAddress);
+                    row.insertCell(2).innerHTML = boxes[i].ip;
+                    row.insertCell(3).innerHTML = boxes[i].mac;
+                    row.insertCell(4).innerHTML = numOutputs;
+                    row.insertCell(5).innerHTML = numUniPOut;
+                    row.insertCell(6).innerHTML = boxes[i].version;
+
                     if (temp > 60) {
                         row.insertCell(7).innerHTML = "<span class='red'>" + temp + "°C</span>";
                     } else if (temp > 40) {
@@ -95,13 +107,14 @@
                     }
                     row.insertCell(8).innerHTML = fps;
                     row.insertCell(9).innerHTML = uUniPF;
-                    row.insertCell(10).innerHTML = "<a class='inline_a' href='#' onClick='updateClient(" + boxes[i].ip + ");' >update</a>";
+                    var ipString = '"' + boxes[i].ip + '"';
+                    row.insertCell(10).innerHTML = "<a class='inline_a' href='#' onClick='updateClient(" + ipString + ");' >readdress</a>";
 
-                }
+                };
 
             } else {
                 document.getElementById("nodeList").innerHTML = "<p> no nodes found  </p>";
-            }
+            };
         });
     </script>
     <style>
@@ -147,7 +160,7 @@
             display: block;
             border: 1px solid;
             height: auto;
-            width: 50px;
+            width: 60px;
             text-align: center;
             font-size: 12px;
             text-decoration: none;
@@ -191,7 +204,7 @@
 <body>
     <div id="content">
         <div class="header">
-            <h1><span class="justShadow">Black </span><span class="red">LED</span> Control Panel <img src="Logo.png" style="width:50px;height:auto;"> </h1>
+            <h1><img src="Logo.png" style="width:50px;height:auto;"><span class="justShadow">BlackLED </span> </h1>
         </div>
 
 
