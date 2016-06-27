@@ -98,12 +98,14 @@
                     row.insertCell(5).innerHTML = numUniPOut;
                     row.insertCell(6).innerHTML = boxes[i].version;
 
-                    if (temp > 60) {
+                    if (temp > 90) {
                         row.insertCell(7).innerHTML = "<span class='red'>" + temp + "°C</span>";
-                    } else if (temp > 40) {
+                    } else if (temp > 75) {
+                        row.insertCell(7).innerHTML = "<span class='orange'>" + temp + "°C</span>";
+                    } else if (temp > 60){
                         row.insertCell(7).innerHTML = "<span class='yellow'>" + temp + "°C</span>";
                     } else {
-                        row.insertCell(7).innerHTML = "<span class='green'>" + temp + "°C</span>";
+                        row.insertCell(7).innerHTML = temp + "°C";
                     }
                     row.insertCell(8).innerHTML = fps;
                     row.insertCell(9).innerHTML = uUniPF;
@@ -178,12 +180,12 @@
             color: #F00;
         }
 
-        .yellow {
-            color: #FF0;
+        .orange {
+            color: #F80;
         }
 
-        .green {
-            color: #0F0;
+        .yellow {
+            color: #FF0;
         }
 
         .justShadow {
