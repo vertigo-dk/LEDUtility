@@ -7,6 +7,10 @@ This utility can monitor and configure ArtNet 3 devices, specificaly developed f
 ## Install
 Clone repository, and run `npm install`
 
+### dependent
+`npm install express --save`
+`npm install socket.io`
+
 ## Run
 - To monitor visible nodes on the network, run `node app -m`
 - To update a node, run `node app -u`
