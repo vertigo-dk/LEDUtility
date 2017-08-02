@@ -69,13 +69,13 @@
                 row.insertCell(j++).innerHTML = "Name";
                 row.insertCell(j++).innerHTML = "ArtAddress";
                 row.insertCell(j++).innerHTML = "IP";
-                row.insertCell(j++).innerHTML = "MAC";
-                row.insertCell(j++).innerHTML = "Port";
-                row.insertCell(j++).innerHTML = "UNI/Port";
-                row.insertCell(j++).innerHTML = "SW_VERSION";
-                row.insertCell(j++).innerHTML = "TEMPERATURE";
-                row.insertCell(j++).innerHTML = "FRAMERATE";
-                row.insertCell(j++).innerHTML = "uUniPF";
+                // row.insertCell(j++).innerHTML = "MAC";
+                // row.insertCell(j++).innerHTML = "Port";
+                // row.insertCell(j++).innerHTML = "UNI/Port";
+                // row.insertCell(j++).innerHTML = "SW_VERSION";
+                row.insertCell(j++).innerHTML = "Temp";
+                row.insertCell(j++).innerHTML = "Fps";
+                // row.insertCell(j++).innerHTML = "uUniPF";
                 row.insertCell(j++).innerHTML = " ";
 
                 for (var i = 0; i < boxes.length; i++) {
@@ -88,17 +88,17 @@
                     var temp = report[5] || undefined;
                     var fps = report[7] || undefined;
                     var uUniPF = report[9] || undefined;
-                    var startAddress = (boxes[i].net << 8) + (boxes[i].subnet << 4) + parseInt(boxes[i].universesOutput[0]);
+                    var startAddress = parseInt(boxes[i].net << 8) + parseInt(boxes[i].subnet << 4) + parseInt(boxes[i].universesOutput[0]);
                     var endAddress = (boxes[i].net << 8) + (boxes[i].subnet << 4) + parseInt(boxes[i].universesOutput[0]) + numOutputs * numUniPOut;
 
                     j = 0
                     row.insertCell(j++).innerHTML = boxes[i].name;
-                    row.insertCell(j++).innerHTML = parseInt(startAddress) + " - " + parseInt(endAddress);
+                    row.insertCell(j++).innerHTML = startAddress + " - " + endAddress;
                     row.insertCell(j++).innerHTML = boxes[i].ip;
-                    row.insertCell(j++).innerHTML = boxes[i].mac;
-                    row.insertCell(j++).innerHTML = numOutputs;
-                    row.insertCell(j++).innerHTML = numUniPOut;
-                    row.insertCell(j++).innerHTML = boxes[i].version;
+                    // row.insertCell(j++).innerHTML = boxes[i].mac;
+                    // row.insertCell(j++).innerHTML = numOutputs;
+                    // row.insertCell(j++).innerHTML = numUniPOut;
+                    // row.insertCell(j++).innerHTML = boxes[i].version;
 
                     if (temp > 90) {
                         row.insertCell(j++).innerHTML = "<span class='red'>" + temp + "°C</span>";
@@ -110,7 +110,7 @@
                         row.insertCell(j++).innerHTML = temp + "°C";
                     }
                     row.insertCell(j++).innerHTML = fps;
-                    row.insertCell(j++).innerHTML = uUniPF;
+                    // row.insertCell(j++).innerHTML = uUniPF;
                     var ipString = '"' + boxes[i].ip + '"';
                     row.insertCell(j++).innerHTML = "<a class='inline_a' href='#' onClick='updateClient(" + ipString + ");' >readdress</a>";
 
