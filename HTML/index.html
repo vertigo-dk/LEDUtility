@@ -64,17 +64,19 @@
                 var rowCount = table.rows.length;
                 var row = table.insertRow(rowCount);
 
-                row.insertCell(0).innerHTML = "NAME";
-                row.insertCell(1).innerHTML = "ADDRESS";
-                row.insertCell(2).innerHTML = "IP";
-                row.insertCell(3).innerHTML = "MAC";
-                row.insertCell(4).innerHTML = "OUTPUTS";
-                row.insertCell(5).innerHTML = "UNIVERSES/OUTPUT";
-                row.insertCell(6).innerHTML = "SW_VERSION";
-                row.insertCell(7).innerHTML = "TEMPERATURE";
-                row.insertCell(8).innerHTML = "FRAMERATE";
-                row.insertCell(9).innerHTML = "uUniPF";
-                row.insertCell(10).innerHTML = " ";
+                let j = 0
+
+                row.insertCell(j++).innerHTML = "Name";
+                row.insertCell(j++).innerHTML = "ArtAddress";
+                row.insertCell(j++).innerHTML = "IP";
+                row.insertCell(j++).innerHTML = "MAC";
+                row.insertCell(j++).innerHTML = "Port";
+                row.insertCell(j++).innerHTML = "UNI/Port";
+                row.insertCell(j++).innerHTML = "SW_VERSION";
+                row.insertCell(j++).innerHTML = "TEMPERATURE";
+                row.insertCell(j++).innerHTML = "FRAMERATE";
+                row.insertCell(j++).innerHTML = "uUniPF";
+                row.insertCell(j++).innerHTML = " ";
 
                 for (var i = 0; i < boxes.length; i++) {
                     rowCount = table.rows.length;
@@ -89,27 +91,28 @@
                     var startAddress = (boxes[i].net << 8) + (boxes[i].subnet << 4) + parseInt(boxes[i].universesOutput[0]);
                     var endAddress = (boxes[i].net << 8) + (boxes[i].subnet << 4) + parseInt(boxes[i].universesOutput[0]) + numOutputs * numUniPOut;
 
-                    row.insertCell(0).innerHTML = boxes[i].name;
-                    row.insertCell(1).innerHTML = parseInt(startAddress) + " - " + parseInt(endAddress);
-                    row.insertCell(2).innerHTML = boxes[i].ip;
-                    row.insertCell(3).innerHTML = boxes[i].mac;
-                    row.insertCell(4).innerHTML = numOutputs;
-                    row.insertCell(5).innerHTML = numUniPOut;
-                    row.insertCell(6).innerHTML = boxes[i].version;
+                    j = 0
+                    row.insertCell(j++).innerHTML = boxes[i].name;
+                    row.insertCell(j++).innerHTML = parseInt(startAddress) + " - " + parseInt(endAddress);
+                    row.insertCell(j++).innerHTML = boxes[i].ip;
+                    row.insertCell(j++).innerHTML = boxes[i].mac;
+                    row.insertCell(j++).innerHTML = numOutputs;
+                    row.insertCell(j++).innerHTML = numUniPOut;
+                    row.insertCell(j++).innerHTML = boxes[i].version;
 
                     if (temp > 90) {
-                        row.insertCell(7).innerHTML = "<span class='red'>" + temp + "°C</span>";
+                        row.insertCell(j++).innerHTML = "<span class='red'>" + temp + "°C</span>";
                     } else if (temp > 75) {
-                        row.insertCell(7).innerHTML = "<span class='orange'>" + temp + "°C</span>";
+                        row.insertCell(j++).innerHTML = "<span class='orange'>" + temp + "°C</span>";
                     } else if (temp > 60){
-                        row.insertCell(7).innerHTML = "<span class='yellow'>" + temp + "°C</span>";
+                        row.insertCell(j++).innerHTML = "<span class='yellow'>" + temp + "°C</span>";
                     } else {
-                        row.insertCell(7).innerHTML = temp + "°C";
+                        row.insertCell(j++).innerHTML = temp + "°C";
                     }
-                    row.insertCell(8).innerHTML = fps;
-                    row.insertCell(9).innerHTML = uUniPF;
+                    row.insertCell(j++).innerHTML = fps;
+                    row.insertCell(j++).innerHTML = uUniPF;
                     var ipString = '"' + boxes[i].ip + '"';
-                    row.insertCell(10).innerHTML = "<a class='inline_a' href='#' onClick='updateClient(" + ipString + ");' >readdress</a>";
+                    row.insertCell(j++).innerHTML = "<a class='inline_a' href='#' onClick='updateClient(" + ipString + ");' >readdress</a>";
 
                 };
 
