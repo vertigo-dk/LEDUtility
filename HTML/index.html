@@ -40,8 +40,7 @@
         }
 
         function updateClient(boxIp) {
-            var newName = document.getElementById('newName').value + " " + lpad(document.getElementById('newStartAddress').value,
-                3);
+            var newName = document.getElementById('newName').value;
         var newAddress = document.getElementById('newStartAddress').value;
         socket.emit('updateClient', {
             ip: boxIp,
