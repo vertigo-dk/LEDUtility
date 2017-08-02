@@ -153,7 +153,7 @@ function createList() {
     });
 
     for (var i = 0; i < controller.nodes.length; i++) {
-        boxes.push(new BlackLED(controller.nodes[i].ip, controller.nodes[i].mac, controller.nodes[i].name, controller.nodes[i].version, controller.nodes[i].numOutputs, controller.nodes[i].universesOutput.join(','), controller.nodes[i].net, controller.nodes[i].subnet, controller.nodes[i].report));
+        boxes.push(new BlackLED(controller.nodes[i].ip, controller.nodes[i].mac, controller.nodes[i].name, controller.nodes[i].version, controller.nodes[i].numOutputs, controller.nodes[i].universesOutput, controller.nodes[i].net, controller.nodes[i].subnet, controller.nodes[i].report));
     }
     return boxes;
 }
