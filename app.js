@@ -120,17 +120,7 @@ function updateTable() {
         head: ['IP', 'MAC', 'Name', 'Version', 'Ports', 'Universes', 'net', 'subnet', 'report']
     });
 
-    if (controller.nodes.length == 0) {
-      console.error("No nodes found")
-    } else {
-      controller.nodes.sort(function(a, b){
-        //var startAddressA = (a.net <<8)+(a.subnet<<4)+parseInt(a.universesOutput[0]);
-        //var startAddressB = (b.net <<8)+(b.subnet<<4)+parseInt(b.universesOutput[0]);
-        if(a.name < b.name) return -1;
-        if(a.name > b.name) return 1;
-        //return startAddressA-startAddressB;
-      });
-    }
+    
     for (var i = 0; i < controller.nodes.length; i++) {
         console.log(controller.nodes[i])
         table.push(
@@ -160,10 +150,17 @@ function BlackLED(ip, mac, name, version, numOutputs, universesOutput, net, subn
 
 function createList() {
     var boxes = [];
+    // controller.nodes.sort(function(a, b){
+    //     var startAddressA = (a.net <<8)+(a.subnet<<4)+parseInt(a.universesOutput[0]);
+    //     var startAddressB = (b.net <<8)+(b.subnet<<4)+parseInt(b.universesOutput[0]);
+    //     return startAddressA-startAddressB;
+    // });
     controller.nodes.sort(function(a, b){
-        var startAddressA = (a.net <<8)+(a.subnet<<4)+parseInt(a.universesOutput[0]);
-        var startAddressB = (b.net <<8)+(b.subnet<<4)+parseInt(b.universesOutput[0]);
-        return startAddressA-startAddressB;
+      //var startAddressA = (a.net <<8)+(a.subnet<<4)+parseInt(a.universesOutput[0]);
+      //var startAddressB = (b.net <<8)+(b.subnet<<4)+parseInt(b.universesOutput[0]);
+      if(a.name < b.name) return -1;
+      if(a.name > b.name) return 1;
+      //return startAddressA-startAddressB;
     });
 
     for (var i = 0; i < controller.nodes.length; i++) {
