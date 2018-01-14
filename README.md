@@ -1,5 +1,5 @@
 # LED Utility
-Developed by Jonas Jongejan for Vertigo 2015
+Initially developed by Jonas Jongejan for Vertigo 2015
 
 ## About
 This utility can monitor and configure ArtNet 3 devices, specificaly developed for a [custom made ArtNet node](https://github.com/vertigo-dk/VardeLED) running in Teensy
