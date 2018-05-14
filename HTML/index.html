@@ -48,6 +48,22 @@
             id: newAddress
         });
         };
+
+        function resetClient(boxIp, numOut) {
+          var sp = boxIp.split('.');
+          var id = []
+          id[0] = parseInt(sp[1]);
+          id[1] = parseInt(sp[2]);
+          id[2] = parseInt(sp[3]);
+          var newName = 'BlackLED_p' + numOut + '_' + lpad(id[0],2).toString(16).toUpperCase() +':'+ lpad(id[1],2).toString(16).toUpperCase() +':'+ lpad(id[3],2).toString(16).toUpperCase();
+        var newAddress = 0;
+        socket.emit('updateClient', {
+            ip: boxIp,
+            name: newName,
+            id: newAddress
+        });
+        };
+
         var boxes = [];
 
         socket.on('nodeList', function(list) {
@@ -76,6 +92,7 @@
                 row.insertCell(j++).innerHTML = "Temp";
                 row.insertCell(j++).innerHTML = "Fps";
                 // row.insertCell(j++).innerHTML = "uUniPF";
+                row.insertCell(j++).innerHTML = " ";
                 row.insertCell(j++).innerHTML = " ";
 
                 for (var i = 0; i < boxes.length; i++) {
@@ -112,7 +129,9 @@
                     row.insertCell(j++).innerHTML = fps;
                     // row.insertCell(j++).innerHTML = uUniPF;
                     var ipString = '"' + boxes[i].ip + '"';
+                    var numOuStr = '"' + numOutputs + '"';
                     row.insertCell(j++).innerHTML = "<a class='inline_a' href='#' onClick='updateClient(" + ipString + ");' >readdress</a>";
+                    row.insertCell(j++).innerHTML = "<a class='inline_a' href='#' onClick='resetClient(" + ipString +','+ numOuStr + ");' >reset</a>";
 
                 };
 
