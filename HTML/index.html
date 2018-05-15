@@ -40,7 +40,7 @@
         }
 
         function updateClient(boxIp) {
-            var newName = document.getElementById('newName').value;
+        var newName = document.getElementById('newName').value;
         var newAddress = document.getElementById('newStartAddress').value;
         socket.emit('updateClient', {
             ip: boxIp,
@@ -50,12 +50,8 @@
         };
 
         function resetClient(boxIp, numOut) {
-          var sp = boxIp.split('.');
-          var id = []
-          id[0] = parseInt(sp[1]);
-          id[1] = parseInt(sp[2]);
-          id[2] = parseInt(sp[3]);
-          var newName = 'BlackLED_p' + numOut + '_' + lpad(id[0],2).toString(16).toUpperCase() +':'+ lpad(id[1],2).toString(16).toUpperCase() +':'+ lpad(id[3],2).toString(16).toUpperCase();
+
+          var newName = 'BlackLED_p' + numOut + '_' + boxIp.slice(2).replace('.',':').replace('.',':');
         var newAddress = 0;
         socket.emit('updateClient', {
             ip: boxIp,
@@ -85,10 +81,10 @@
                 row.insertCell(j++).innerHTML = "Name";
                 row.insertCell(j++).innerHTML = "ArtAddress";
                 row.insertCell(j++).innerHTML = "IP";
-                // row.insertCell(j++).innerHTML = "MAC";
+                row.insertCell(j++).innerHTML = "MAC";
                 // row.insertCell(j++).innerHTML = "Port";
                 // row.insertCell(j++).innerHTML = "UNI/Port";
-                // row.insertCell(j++).innerHTML = "SW_VERSION";
+                row.insertCell(j++).innerHTML = "SW_VERSION";
                 row.insertCell(j++).innerHTML = "Temp";
                 row.insertCell(j++).innerHTML = "Fps";
                 // row.insertCell(j++).innerHTML = "uUniPF";
@@ -112,10 +108,10 @@
                     row.insertCell(j++).innerHTML = boxes[i].name;
                     row.insertCell(j++).innerHTML = startAddress + " - " + endAddress;
                     row.insertCell(j++).innerHTML = boxes[i].ip;
-                    // row.insertCell(j++).innerHTML = boxes[i].mac;
+                    row.insertCell(j++).innerHTML = boxes[i].mac.toUpperCase();
                     // row.insertCell(j++).innerHTML = numOutputs;
                     // row.insertCell(j++).innerHTML = numUniPOut;
-                    // row.insertCell(j++).innerHTML = boxes[i].version;
+                    row.insertCell(j++).innerHTML = boxes[i].version;
 
                     if (temp > 90) {
                         row.insertCell(j++).innerHTML = "<span class='red'>" + temp + "°C</span>";
